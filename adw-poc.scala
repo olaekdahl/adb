@@ -39,28 +39,86 @@ dbutils.widgets.text("database", "", "AdventureWorksLT")
 
 // MAGIC %scala
 // MAGIC val saleslt_customer = spark.read.jdbc(jdbcUrl, "SalesLT.Customer", connectionProperties)
-// MAGIC // val application_countries = spark.read.jdbc(jdbcUrl, "Application.Countries", connectionProperties)
-// MAGIC // val application_stateprovinces = spark.read.jdbc(jdbcUrl, "Application.StateProvinces", connectionProperties)
 
 // COMMAND ----------
 
 // MAGIC %scala
 // MAGIC saleslt_customer.createOrReplaceTempView("Customers")
-// MAGIC // application_countries.createOrReplaceTempView("Countries")
-// MAGIC // application_stateprovinces.createOrReplaceTempView("StateProvinces")
 
 // COMMAND ----------
 
 // MAGIC %sql
 // MAGIC SELECT * 
 // MAGIC FROM Customers
-// MAGIC 
-// MAGIC --  %sql
-// MAGIC --  Select CityID,CityName,StateProvinceCode,SalesTerritory,CountryName,CountryType,Continent,Region,Subregion 
-// MAGIC --  FROM Cities c 
-// MAGIC --  INNER JOIN StateProvinces sp ON c.StateProvinceID = sp.StateProvinceID 
-// MAGIC --  INNER JOIN Countries co ON sp.CountryID = co.CountryID 
-// MAGIC --  LIMIT 10
+
+// COMMAND ----------
+
+// MAGIC %scala
+// MAGIC var storage_key = dbutils.secrets.get(scope = "key-vault-secrets", key = "asadatalakej2dxbgn-key")
+
+// COMMAND ----------
+
+// MAGIC %scala
+// MAGIC spark.conf.set(
+// MAGIC "fs.azure.account.key.asadatalakej2dxbgn.dfs.core.windows.net",
+// MAGIC s"${storage_key}"
+// MAGIC )
+
+// COMMAND ----------
+
+// MAGIC %scala
+// MAGIC dbutils.fs.ls("abfss://wwi-02@asadatalakej2dxbgn.dfs.core.windows.net/customer-info")
+
+// COMMAND ----------
+
+// MAGIC %scala
+// MAGIC // set the data lake file location:
+// MAGIC var file_location = "abfss://wwi-02@asadatalakej2dxbgn.dfs.core.windows.net/customer-info/customerinfo.csv"
+// MAGIC  
+// MAGIC // read in the data to dataframe df
+// MAGIC var df = spark.read.format("csv").option("inferSchema", "true").option("header",
+// MAGIC "true").option("delimiter",",").load(file_location)
+// MAGIC  
+// MAGIC // display the dataframe
+// MAGIC display(df)
+
+// COMMAND ----------
+
+// MAGIC %sql
+// MAGIC -- HIVE db
+// MAGIC CREATE DATABASE adls_customers
+
+// COMMAND ----------
+
+// MAGIC %sql
+// MAGIC CREATE TABLE IF NOT EXISTS adls_customers.customer_info
+// MAGIC USING CSV
+// MAGIC LOCATION 'abfss://wwi-02@asadatalakej2dxbgn.dfs.core.windows.net/customer-info/customerinfo.csv'
+
+// COMMAND ----------
+
+// MAGIC %sql
+// MAGIC SELECT * FROM adls_customers.customer_info;
+
+// COMMAND ----------
+
+// MAGIC %sql
+// MAGIC DROP TABLE adls_customers.customer_info;
+// MAGIC CREATE TABLE IF NOT EXISTS adls_customers.customer_info
+// MAGIC USING CSV
+// MAGIC LOCATION 'abfss://wwi-02@asadatalakej2dxbgn.dfs.core.windows.net/customer-info/customerinfo.csv'
+// MAGIC OPTIONS (header "true", inferSchema "true");
+
+// COMMAND ----------
+
+// MAGIC %sql
+// MAGIC SELECT * FROM adls_customers.customer_info;
+
+// COMMAND ----------
+
+// MAGIC %sql
+// MAGIC SELECT db.FirstName, db.LastName, csv.CreditCard, csv.Email
+// MAGIC FROM Customers AS db INNER JOIN adls_customers.customer_info AS csv ON db.EmailAddress = TRIM(csv.Email);
 
 // COMMAND ----------
 
