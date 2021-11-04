@@ -1,8 +1,4 @@
 // Databricks notebook source
-
-
-// COMMAND ----------
-
 // MAGIC %scala
 // MAGIC //https://www.mssqltips.com/sqlservertip/6151/using-azure-databricks-to-query-azure-sql-database/
 // MAGIC 
