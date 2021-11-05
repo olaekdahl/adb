@@ -15,7 +15,7 @@ df.write.format("delta").mode("overwrite").saveAsTable("customers_delta") //http
 
 // COMMAND ----------
 
-spark.sql("select count(*) from customers_delta").show()
+spark.sql("select count(*) as records_count from customers_delta").show()
 spark.sql("select * from customers_delta").show(10)
 spark.sql("select firstname, lastname, type, timestamp from customers_delta").show(10)
 
