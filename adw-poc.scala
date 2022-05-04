@@ -54,26 +54,26 @@ dbutils.widgets.text("database", "", "AdventureWorksLT")
 // COMMAND ----------
 
 // MAGIC %scala
-// MAGIC var storage_key = dbutils.secrets.get(scope = "key-vault-secrets", key = "asadatalakej2dxbgn-key")
+// MAGIC var storage_key = dbutils.secrets.get(scope = "key-vault-secrets", key = "asadatalakes4xt9l0-key")
 
 // COMMAND ----------
 
 // MAGIC %scala
 // MAGIC spark.conf.set(
-// MAGIC "fs.azure.account.key.asadatalakej2dxbgn.dfs.core.windows.net",
+// MAGIC "fs.azure.account.key.asadatalakes4xt9l0.dfs.core.windows.net",
 // MAGIC s"${storage_key}"
 // MAGIC )
 
 // COMMAND ----------
 
 // MAGIC %scala
-// MAGIC dbutils.fs.ls("abfss://wwi-02@asadatalakej2dxbgn.dfs.core.windows.net/customer-info")
+// MAGIC dbutils.fs.ls("abfss://wwi-02@asadatalakes4xt9l0.dfs.core.windows.net/customer-info")
 
 // COMMAND ----------
 
 // MAGIC %scala
 // MAGIC // set the data lake file location:
-// MAGIC var file_location = "abfss://wwi-02@asadatalakej2dxbgn.dfs.core.windows.net/customer-info/customerinfo.csv"
+// MAGIC var file_location = "abfss://wwi-02@asadatalakes4xt9l0.dfs.core.windows.net/customer-info/customerinfo.csv"
 // MAGIC  
 // MAGIC // read in the data to dataframe df
 // MAGIC var df = spark.read.format("csv").option("inferSchema", "true").option("header",
@@ -93,7 +93,7 @@ dbutils.widgets.text("database", "", "AdventureWorksLT")
 // MAGIC %sql
 // MAGIC CREATE TABLE IF NOT EXISTS adls_customers.customer_info
 // MAGIC USING CSV
-// MAGIC LOCATION 'abfss://wwi-02@asadatalakej2dxbgn.dfs.core.windows.net/customer-info/customerinfo.csv'
+// MAGIC LOCATION 'abfss://wwi-02@asadatalakes4xt9l0.dfs.core.windows.net/customer-info/customerinfo.csv'
 
 // COMMAND ----------
 
@@ -106,7 +106,7 @@ dbutils.widgets.text("database", "", "AdventureWorksLT")
 // MAGIC DROP TABLE adls_customers.customer_info;
 // MAGIC CREATE TABLE IF NOT EXISTS adls_customers.customer_info
 // MAGIC USING CSV
-// MAGIC LOCATION 'abfss://wwi-02@asadatalakej2dxbgn.dfs.core.windows.net/customer-info/customerinfo.csv'
+// MAGIC LOCATION 'abfss://wwi-02@asadatalakes4xt9l0.dfs.core.windows.net/customer-info/customerinfo.csv'
 // MAGIC OPTIONS (header "true", inferSchema "true");
 
 // COMMAND ----------
