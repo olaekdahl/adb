@@ -9,8 +9,10 @@ val jdbcPassword = dbutils.secrets.get(scope = "key-vault-secrets", key = "adw-p
  
 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver")
 
-dbutils.widgets.text("hostName", "", "power-bi-demo.database.windows.net")
-dbutils.widgets.text("database", "", "AdventureWorksLT")
+// hostname: power-bi-demo.database.windows.net
+// database: AdventureWorksLT
+dbutils.widgets.text("hostName", "", "Host name")
+dbutils.widgets.text("database", "", "Database")
 
 val jdbcHostname = dbutils.widgets.get("hostName")
 val jdbcPort = 1433
